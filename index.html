@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Covid</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+        <div class="col-xl-6 col-lg-8">
+          <h1>Covid 19 Cases<span>.</span></h1>
+          <h2>All over world</h2>
+        </div>
+      </div>
+
+      <div class="container">
+        <table class="table table-dark ">
+            <thead style="color: aliceblue;">
+                <tr>
+                    <th>Total Cases</th>
+                    <th>Total Deaths</th>
+                    <th>Total Recovered</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id ="data" style="color: whitesmoke;">
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <form id="myForm" style="display:inline-block;">
+          <input class="form-control" style="max-width: 500px; text-align: center;" type="text" id="country" placeholder="Country Name" required>
+          <br><input class="btn btn-primary" type="submit" value="Get Data">
+        </form>
+        <table class="table table-wrapper-scroll-y my-custom-scrollbar table-dark mt-5">
+          <thead style="color: aliceblue;">
+              <tr>
+                  <th>Country</th>
+                  <th>Total Cases</th>
+                  <th >Total Deaths</th>
+                  <th >Total Recovered</th>
+              </tr>
+          </thead>
+          <tbody id="myTable">
+              <tr id ="data1" style="color: whitesmoke;">
+                <td id="cou">#</td>
+                <td id="confirmed">#</td>
+                  <td id="deaths">#</td>
+                  <td id="recovered">#</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+    </div>
+  </section><!-- End Hero -->
+
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/purecounter/purecounter.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+
+    $(document).ready(function(){
+      init()
+      function init(){
+        var url="https://coronavirus-19-api.herokuapp.com/countries"
+        var data=''
+        $.get(url,function(data){
+          data=`
+          <td>${data[0].cases}</td>
+          <td>${data[0].deaths}</td>
+          <td>${data[0].recovered}</td>
+          `
+          $("#data").html(data)
+        })
+      }
+    })
+
+    $(document).ready(function(){
+    buildTable()
+      function buildTable(){
+        var url="https://coronavirus-19-api.herokuapp.com/countries"
+        
+        $.get(url,function(data){
+        for(var i=1;i<data.length;i++){
+        
+        $('#myTable tr:last').after(
+          `<tr>
+                    <td>${data[i].country}</td>
+                    <td>${data[i].cases}</td>
+                    <td>${data[i].deaths}</td>
+                    <td>${data[i].recovered}</td>
+               </tr>`
+        )
+        }
+        })
+      }
+      })
+
+
+
+
+
+
+
+
+    var myForm=document.getElementById('myForm')
+    myForm.addEventListener('submit',function(e){
+      e.preventDefault()
+
+      var country =document.getElementById('country').value
+      var url="https://api.covid19api.com/total/dayone/country/"+country
+      fetch(url)
+      .then((res)=>res.json())
+      .then((res)=>{
+        var length= res.length
+        var index=length-1;
+        var confirmed=document.getElementById('confirmed')
+        var recovered=document.getElementById('recovered')
+        var deaths=document.getElementById('deaths')
+        cou.innerHTML=''
+        confirmed.innerHTML=''
+        recovered.innerHTML=''
+        deaths.innerHTML=''
+        cou.append(res[index].Country)
+        confirmed.append(res[index].Confirmed)
+        recovered.append(res[index].Recovered)
+        deaths.append(res[index].Deaths)
+      })
+    })
+  </script>
+</body>
+</html>
